@@ -1,4 +1,4 @@
-#include <stdio.stdio.h> // Biblioteca padrão de entrada e saída (para usar printf e scanf)
+#include <stdio.h> // Biblioteca padrão de entrada e saída (para usar printf e scanf)
 
 int main() {
     float nota1, nota2, media;
