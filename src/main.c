@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lista.h"
+#include "pilha.h"
 
 int main() {
     No *inicio = NULL;
+    Pilha historico;
+    inicializarPilha(&historico);
     int opcao;
     int id;
 
@@ -14,6 +17,9 @@ int main() {
         printf("2 - Listar livros\n");
         printf("3 - Buscar livro\n");
         printf("4 - Remover livro\n");
+        printf("5 - Mostrar historico\n");
+        printf("6 - Consultar ultima acao (Peek)\n");
+        printf("7 - Remover ultima acao (Pop)\n");
         printf("0 - Sair\n");
         printf("Escolha: ");
 
@@ -40,6 +46,7 @@ int main() {
             getchar();
 
             inserirFim(&inicio, novo);
+            push(&historico, "Cadastro de livro");
 
             printf("\nLivro cadastrado!\n");
         }
@@ -51,6 +58,7 @@ int main() {
             scanf("%d", &id);
 
             No *resultado = buscarLivro(inicio, id);
+            push(&historico, "Busca de livro");
 
             if (resultado != NULL) {
                 printf("\nLivro encontrado!");
@@ -66,13 +74,24 @@ int main() {
             scanf("%d", &id);
 
             removerLivro(&inicio, id);
+            push(&historico, "Remocao de livro");
+        }
+        else if (opcao == 5) {
+            mostrarHistorico(&historico);
+        }
+        else if (opcao == 6) {
+            peek(&historico);
+        }
+        else if (opcao == 7) {
+            pop(&historico);
         }
         else if (opcao != 0) {
             printf("\nOpcao invalida!\n");
         }
 
     } while (opcao != 0);
-
+    mostrarHistorico(&historico);
+    liberarPilha(&historico);
     liberarLista(&inicio);
 
     printf("\nPrograma encerrado!\n");
