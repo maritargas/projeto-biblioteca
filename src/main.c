@@ -3,11 +3,15 @@
 #include <string.h>
 #include "lista.h"
 #include "pilha.h"
+#include "bst.h"
 
 int main() {
     No *inicio = NULL;
+    NoArvore *raiz = NULL;
+
     Pilha historico;
     inicializarPilha(&historico);
+
     int opcao;
     int id;
 
@@ -45,10 +49,26 @@ int main() {
             scanf("%d", &novo.ano);
             getchar();
 
-            inserirFim(&inicio, novo);
-            push(&historico, "Cadastro de livro");
+            // Verificando se o ID existe
+            if (buscarBST(raiz, novo.id) != NULL) {
+                printf("\nJa existe um livro com esse ID!\n");
+            }
+            else {
 
-            printf("\nLivro cadastrado!\n");
+                //Inserindo o livro na arvore
+                if (inserirBST(&raiz, novo) == 1) {
+
+                    //Inserindo o livro na lista
+                    inserirFim(&inicio, novo);
+
+                    push(&historico, "Cadastro de livro");
+
+                    printf("\nLivro cadastrado com sucesso!\n");
+                }
+                else {
+                    printf("\nErro ao cadastrar o livro!\n");
+                }
+            }
         }
         else if (opcao == 2) {
             listarLivros(inicio);
@@ -57,15 +77,15 @@ int main() {
             printf("\nDigite o ID do livro: ");
             scanf("%d", &id);
 
-            No *resultado = buscarLivro(inicio, id);
-            push(&historico, "Busca de livro");
+            NoArvore *resultado = buscarBST(raiz, id);
 
             if (resultado != NULL) {
                 printf("\nLivro encontrado!");
                 printf("\nTitulo: %s", resultado->livro.titulo);
                 printf("\nAutor: %s", resultado->livro.autor);
                 printf("\nAno: %d\n", resultado->livro.ano);
-            } else {
+            }
+            else {
                 printf("\nLivro nao encontrado!\n");
             }
         }
@@ -73,8 +93,15 @@ int main() {
             printf("\nDigite o ID do livro que deseja remover: ");
             scanf("%d", &id);
 
+            if (buscarBST(raiz, id) != NULL) {
             removerLivro(&inicio, id);
+            removerBST(&raiz, id);
+
             push(&historico, "Remocao de livro");
+        }
+            else {
+            printf("\nLivro nao encontrado!\n");
+            }
         }
         else if (opcao == 5) {
             mostrarHistorico(&historico);
@@ -90,9 +117,11 @@ int main() {
         }
 
     } while (opcao != 0);
+
     mostrarHistorico(&historico);
     liberarPilha(&historico);
     liberarLista(&inicio);
+    liberarBST(&raiz);
 
     printf("\nPrograma encerrado!\n");
 
