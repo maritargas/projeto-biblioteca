@@ -3,8 +3,8 @@
 
 typedef struct {
     int id;
-    char titulo[100];
-    char autor[100];
+    char titulo[80];
+    char autor[80];
     int ano;
 } Livro;
 
